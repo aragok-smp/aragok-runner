@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   proxy:
     build: .
@@ -9,7 +7,7 @@ services:
     ports:
       - "25565:25565"
     volumes:
-      - /opt/minecraft/server/proxy:/server
+      - ./proxy:/server
 
   # The Survival Server
   survival: # note the name must be the same as in manifest.values.serverName
@@ -18,4 +16,4 @@ services:
     container_name: aragok-prod-survival
     restart: unless-stopped
     volumes:
-      - /opt/minecraft/server/survival:/server
+      - ./survival:/server
