@@ -4,6 +4,8 @@ services:
     image: gok-minecraft-runner:latest
     container_name: aragok-prod-proxy
     restart: unless-stopped
+    tty: true
+    stdin_open: true
     ports:
       - "25565:25565"
     volumes:
@@ -15,5 +17,7 @@ services:
     image: gok-minecraft-runner:latest
     container_name: aragok-prod-survival
     restart: unless-stopped
+    tty: true
+    stdin_open: true
     volumes:
       - ./survival:/server
