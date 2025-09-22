@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  proxy:
+    build: .
+    image: gok-minecraft-runner:latest
+    container_name: aragok-prod-proxy
+    restart: unless-stopped
+    ports:
+      - "25565:25565"
+    volumes:
+      - /opt/minecraft/server/proxy:/server
+
+  # The Survival Server
+  survival: # note the name must be the same as in manifest.values.serverName
+    build: .
+    image: gok-minecraft-runner:latest
+    container_name: aragok-prod-survival
+    restart: unless-stopped
+    volumes:
+      - /opt/minecraft/server/survival:/server
