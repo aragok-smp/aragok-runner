@@ -1,3 +1,4 @@
+.env
 gok-lock.yaml
-/proxy
-/survival
+proxy/
+survival/
