@@ -13,4 +13,4 @@ RUN chown -R javauser:javauser /server
 USER javauser
 
 # We expect a start script to be provided by the user.
-ENTRYPOINT ["sh", "-c", "chmod +x /server/start.sh && /server/start.sh"]
+ENTRYPOINT ["sh", "-c", "chmod +x /server/entrypoint.sh && /server/entrypoint.sh"]
