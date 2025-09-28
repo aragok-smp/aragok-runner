@@ -25,9 +25,8 @@ echo "Creating staging database $STAGING_PG_DB..."
 docker exec -t aragok-staging-postgres createdb -U "$STAGING_PG_USER" "$STAGING_PG_DB"
 
 echo "Importing dump..."
-docker cp dump.sql aragok-staging-postgres:/tmp/dump.sql
+docker exec -i aragok-staging-postgres psql -v ON_ERROR_STOP=1 -U "$STAGING_PG_USER" -d "$STAGING_PG_DB" < dump.sql
 rm dump.sql
-docker exec -t aragok-staging-postgres psql -U "$STAGING_PG_USER" -d "$STAGING_PG_DB" -f /tmp/dump.sql
 
 # start the servers
 echo "Starting servers..."
