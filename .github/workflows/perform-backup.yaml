@@ -1,0 +1,44 @@
+name: Perform Backup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "18 5 * * *"
+
+jobs:
+  render-and-deploy:
+    name: Backup
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    concurrency:
+      group: prod-backup
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Import SSH Key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          # Set up SSH key
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Run Backup
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          RUNNER_DIR="/opt/minecraft/aragok/aragok-runner"
+          BACKUP_SCRIPT="backup.sh"
+          ENV_FILE=".restic-env"
+
+          echo "Running ${BACKUP_SCRIPT}..."
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
+            "${SSH_USER}@${SSH_HOST}" \
+            "source ${RUNNER_DIR}/${ENV_FILE} && ${RUNNER_DIR}/${BACKUP_SCRIPT}"
+
+          echo "Backup complete."
