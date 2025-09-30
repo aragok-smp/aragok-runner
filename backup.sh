@@ -46,7 +46,7 @@ set -e
 
 if [[ $restic_rc -eq 0 ]]; then
     echo "[$(date '+%F %T')] Repository already initialized." | tee -a "$LOGFILE"
-elif [[ $restic_rc -eq 10 ]] || echo "$restic_out" | grep -qiE 'repository does not exist|unable to open config file|no such file or directory'; then
+elif [[ $restic_rc -eq 10 ]]; then
     echo "[$(date '+%F %T')] Repository not found; initializing..." | tee -a "$LOGFILE"
     restic -r "$RESTIC_REPO" init | tee -a "$LOGFILE"
 else
@@ -66,6 +66,11 @@ fi
 
 # --- Retention policy ---
 echo "[$(date '+%F %T')] Applying retention policy and pruning..." | tee -a "$LOGFILE"
-restic -r "$RESTIC_REPO" forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune | tee -a "$LOGFILE"
+if restic -r "$RESTIC_REPO" forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune | tee -a "$LOGFILE"; then
+    echo "[$(date '+%F %T')] Retention policy applied successfully." | tee -a "$LOGFILE"
+else
+    echo "[$(date '+%F %T')] Retention policy application failed." | tee -a "$LOGFILE" >&2
+    exit 1
+fi
 
 echo "[$(date '+%F %T')] Done." | tee -a "$LOGFILE"
