@@ -24,12 +24,6 @@ if ! command -v restic &>/dev/null; then
     exit 1
 fi
 
-# Ensure password exists
-if [[ ! -e "$RESTIC_PASSWORD" ]]; then
-    echo "Error: password '$RESTIC_PASSWORD' not found." | tee -a "$RESTIC_LOGFILE" >&2
-    exit 1
-fi
-
 # Ensure backup source exists
 if [[ ! -e "$RESTIC_BACKUP_SOURCE" ]]; then
     echo "[$(date '+%F %T')] Error: backup source '$RESTIC_BACKUP_SOURCE' does not exist." | tee -a "$RESTIC_LOGFILE" >&2
