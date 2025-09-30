@@ -39,6 +39,6 @@ jobs:
           echo "Running ${BACKUP_SCRIPT}..."
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
             "${SSH_USER}@${SSH_HOST}" \
-            "export $(xargs < ${RUNNER_DIR}/.restic-env) && ${RUNNER_DIR}/${BACKUP_SCRIPT}"
+            "export $(xargs < .restic-env) && ${RUNNER_DIR}/${BACKUP_SCRIPT}"
 
           echo "Backup complete."
