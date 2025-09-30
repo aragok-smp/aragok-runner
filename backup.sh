@@ -25,7 +25,7 @@ if ! command -v restic &>/dev/null; then
 fi
 
 # Ensure password exists
-if [[ ! -f "$RESTIC_PASSWORD" ]]; then
+if [[ ! -e "$RESTIC_PASSWORD" ]]; then
     echo "Error: password '$RESTIC_PASSWORD' not found." | tee -a "$RESTIC_LOGFILE" >&2
     exit 1
 fi
