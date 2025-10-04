@@ -15,6 +15,7 @@ docker exec -t aragok-prod-postgres pg_dump -U "$PROD_PG_USER" -d "$PROD_PG_DB" 
 
 # stop the servers
 echo "Stopping servers..."
+docker stop aragok-staging-creative || true
 docker stop aragok-staging-survival || true
 docker stop aragok-staging-proxy || true
 
@@ -30,6 +31,7 @@ rm dump.sql
 
 # start the servers
 echo "Starting servers..."
+docker start aragok-staging-creative || true
 docker start aragok-staging-survival || true
 docker start aragok-staging-proxy || true
 

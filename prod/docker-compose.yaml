@@ -57,6 +57,18 @@ services:
     volumes:
       - ./survival:/server
 
+  # The Creative Server
+  creative: # note the name must be the same as in manifest.values.serverName
+    build: ..
+    image: gok-minecraft-runner:latest
+    container_name: aragok-${GRADE}-creative
+    restart: unless-stopped
+    depends_on: *dependencies
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./creative:/server
+
 volumes:
   postgres_data:
   redis_data:
