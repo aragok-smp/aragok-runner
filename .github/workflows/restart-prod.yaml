@@ -1,18 +1,16 @@
-name: Perform Backup
+name: Restart Prod
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "18 5 * * *"
 
 jobs:
-  backup:
-    name: Backup
+  restart:
+    name: Restart
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 3
 
     concurrency:
-      group: prod-backup
+      group: restart-prod
       cancel-in-progress: true
 
     steps:
@@ -27,18 +25,17 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Run Backup
+      - name: Run Restart
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
           RUNNER_DIR="/opt/minecraft/aragok/aragok-runner"
-          BACKUP_SCRIPT="backup.sh"
-          ENV_FILE=".restic-env"
+          SCRIPT="restart-prod.sh"
 
-          echo "Running ${BACKUP_SCRIPT}..."
+          echo "Running ${SCRIPT}..."
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
             "${SSH_USER}@${SSH_HOST}" \
-            "source ${RUNNER_DIR}/${ENV_FILE} && ${RUNNER_DIR}/${BACKUP_SCRIPT}"
+            "cd ${RUNNER_DIR} && ${RUNNER_DIR}/${SCRIPT}"
 
-          echo "Backup complete."
+          echo "Restart complete."
